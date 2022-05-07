@@ -1,5 +1,3 @@
-const { body } = document;
+import app from './app.js';
 
-const container = document.createElement('section');
-container.className = 'container';
-body.append(container);
+app();

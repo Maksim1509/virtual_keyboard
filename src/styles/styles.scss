@@ -1,3 +1,13 @@
 * {
   box-sizing: border-box;
 }
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 30px 40px 0;
+}
+
+@import './_output.scss';
+@import './_keyboard.scss';
