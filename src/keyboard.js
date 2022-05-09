@@ -279,7 +279,7 @@ export default () => {
     upperCase: false,
     keyPressed: [],
   };
-  const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab'];
+  const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab', 'Backspace'];
   const keybordWrap = document.createElement('div');
   keybordWrap.className = 'keyboard-wrapper';
   const keyboard = keyboardBuild(state.lang);
@@ -329,6 +329,9 @@ export default () => {
 
   keybordWrap.addEventListener('mousedown', ({ target: { id } }) => {
     if (!id) return;
+    if (id === 'Backspace') {
+      output.value = output.value.slice(0, output.value.length - 1);
+    }
     const key = map[id](state);
     output.value = specialKeys.includes(key) ? output.value : output.value + key;
     document.querySelector(`#${id}`).classList.add('keyboard--btn__active');
