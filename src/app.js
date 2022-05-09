@@ -13,4 +13,5 @@ export default () => {
   container.append(output);
   const keyboard = buildKeyboard();
   container.append(keyboard);
+  document.querySelector('.output').focus();
 };

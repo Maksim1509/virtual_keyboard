@@ -192,23 +192,24 @@ const map = {
   NumpadEnter: () => '\n',
   Enter: () => '\n',
   Backspace: () => '',
+  CapsLock: () => '',
 };
 
 const keyboardBuild = (lang) => {
   const keyboard = `<div class="keyboard--row">
   <div class="keyboard--btn" data-key="alphabet" id="Backquote">${selectKeyLang(lang, '`')}</div>
   <div class="keyboard--btn" id="Digit1">1</div>
-  <div class="keyboard--btn" id="Digit2">2</div>
-  <div class="keyboard--btn" id="Digit3">3</div>
-  <div class="keyboard--btn" id="Digit4">4</div>
-  <div class="keyboard--btn" id="Digit5">5</div>
-  <div class="keyboard--btn" id="Digit6">6</div>
-  <div class="keyboard--btn" id="Digit7">7</div>
-  <div class="keyboard--btn" id="Digit8">8</div>
-  <div class="keyboard--btn" id="Digit9">9</div>
-  <div class="keyboard--btn" id="Digit0">0</div>
-  <div class="keyboard--btn" id="Minus">-</div>
-  <div class="keyboard--btn" id="Equal">=</div>
+  <div class="keyboard--btn" id="Digit2">2<sup>@</sup><sub>"</sub></div>
+  <div class="keyboard--btn" id="Digit3">3<sup>#</sup><sub>№</sub></div>
+  <div class="keyboard--btn" id="Digit4">4<sup>$</sup><sub>;</sub></div>
+  <div class="keyboard--btn" id="Digit5">5<sup>%</sup></div>
+  <div class="keyboard--btn" id="Digit6">6<sup>^</sup><sub>:</sub></div>
+  <div class="keyboard--btn" id="Digit7">7<sup>&</sup><sub>?</sub></div>
+  <div class="keyboard--btn" id="Digit8">8<sup>*</sup></div>
+  <div class="keyboard--btn" id="Digit9">9<sup>(</sup></div>
+  <div class="keyboard--btn" id="Digit0">0<sup>)</sup></div>
+  <div class="keyboard--btn" id="Minus">-<sup>_</sup></div>
+  <div class="keyboard--btn" id="Equal">=<sup>+</sup></div>
   <div class="keyboard--btn" id="Backspace">← Backspace</div>
 </div>
 <div class="keyboard--row">
@@ -279,7 +280,7 @@ export default () => {
     upperCase: false,
     keyPressed: [],
   };
-  const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab', 'Backspace'];
+  const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab', 'Backspace', 'CapsLock'];
   const keybordWrap = document.createElement('div');
   keybordWrap.className = 'keyboard-wrapper';
   const keyboard = keyboardBuild(state.lang);
@@ -307,11 +308,12 @@ export default () => {
       });
     }
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
-      state.upperCase = true;
+      state.upperCase = !state.upperCase;
     }
     if (code === 'Backspace') {
       output.value = output.value.slice(0, output.value.length - 1);
     }
+    if (code === 'CapsLock') state.upperCase = !state.upperCase;
     const key = map[code](state);
     output.value = specialKeys.includes(key) ? output.value : output.value + key;
     document.querySelector(`#${code}`).classList.add('keyboard--btn__active');
@@ -321,7 +323,7 @@ export default () => {
     const { code } = e;
     state.keyPressed = state.keyPressed.filter((k) => k !== code);
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
-      state.upperCase = false;
+      state.upperCase = !state.upperCase;
     }
     const key = document.querySelector(`#${code}`);
     if (key) key.classList.remove('keyboard--btn__active');
@@ -329,6 +331,7 @@ export default () => {
 
   keybordWrap.addEventListener('mousedown', ({ target: { id } }) => {
     if (!id) return;
+    if (id === 'CapsLock') state.upperCase = !state.upperCase;
     if (id === 'Backspace') {
       output.value = output.value.slice(0, output.value.length - 1);
     }
@@ -341,6 +344,7 @@ export default () => {
     if (activeKey) {
       activeKey.classList.remove('keyboard--btn__active');
     }
+    output.focus();
   });
 
   return keybordWrap;
