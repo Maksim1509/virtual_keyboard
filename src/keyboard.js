@@ -178,23 +178,27 @@ const map = {
   AltRight: () => 'AltRight',
   ShiftLeft: () => 'ShiftLeft',
   ShiftRight: () => 'ShiftRight',
+  ArrowUp: () => '↑',
+  ArrowLeft: () => '←',
+  ArrowDown: () => '↓',
+  ArrowRight: () => '→',
 };
 
 const keyboardBuild = (lang) => {
   const keyboard = `<div class="keyboard--row">
-  <div class="keyboard--btn" data-key="alphabet" id="backquote">${selectKeyLang(lang, '`')}</div>
-  <div class="keyboard--btn" id="1">1</div>
-  <div class="keyboard--btn" id="2">2</div>
-  <div class="keyboard--btn" id="3">3</div>
-  <div class="keyboard--btn" id="4">4</div>
-  <div class="keyboard--btn" id="5">5</div>
-  <div class="keyboard--btn" id="6">6</div>
-  <div class="keyboard--btn" id="7">7</div>
-  <div class="keyboard--btn" id="8">8</div>
-  <div class="keyboard--btn" id="9">9</div>
-  <div class="keyboard--btn" id="0">0</div>
-  <div class="keyboard--btn" id="minus">-</div>
-  <div class="keyboard--btn" id="equal">=</div>
+  <div class="keyboard--btn" data-key="alphabet" id="Backquote">${selectKeyLang(lang, '`')}</div>
+  <div class="keyboard--btn" id="Digit1">1</div>
+  <div class="keyboard--btn" id="Digit2">2</div>
+  <div class="keyboard--btn" id="Digit3">3</div>
+  <div class="keyboard--btn" id="Digit4">4</div>
+  <div class="keyboard--btn" id="Digit5">5</div>
+  <div class="keyboard--btn" id="Digit6">6</div>
+  <div class="keyboard--btn" id="Digit7">7</div>
+  <div class="keyboard--btn" id="Digit8">8</div>
+  <div class="keyboard--btn" id="Digit9">9</div>
+  <div class="keyboard--btn" id="Digit0">0</div>
+  <div class="keyboard--btn" id="Minus">-</div>
+  <div class="keyboard--btn" id="Equal">=</div>
   <div class="keyboard--btn" id="backspace">backspase</div>
 </div>
 <div class="keyboard--row">
@@ -240,7 +244,7 @@ const keyboardBuild = (lang) => {
   <div class="keyboard--btn" data-key="alphabet" id="Comma">${selectKeyLang(lang, ',')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="Period">${selectKeyLang(lang, '.')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="Slash">${selectKeyLang(lang, '/')}</div>
-  <div class="keyboard--btn" id="arrow-up">↑</div>
+  <div class="keyboard--btn" id="ArrowUp">↑</div>
   <div class="keyboard--btn" id="ShiftRight">shift</div>
 </div>
 <div class="keyboard--row">
@@ -249,9 +253,9 @@ const keyboardBuild = (lang) => {
   <div class="keyboard--btn" id="AltLeft">alt</div>
   <div class="keyboard--btn" id="Space"> </div>
   <div class="keyboard--btn" id="AltRight">alt</div>
-  <div class="keyboard--btn" id="arrow-left">←</div>
-  <div class="keyboard--btn" id="arrow-bot">↓</div>
-  <div class="keyboard--btn" id="arrow-right">→</div>
+  <div class="keyboard--btn" id="ArrowLeft">←</div>
+  <div class="keyboard--btn" id="ArrowDown">↓</div>
+  <div class="keyboard--btn" id="ArrowRight">→</div>
 </div>
 <div class="change-lang-disc">Change Lang: "AltLeft + ShiftLeft"</div>`;
   return keyboard;
@@ -311,7 +315,10 @@ export default () => {
     document.querySelector(`#${id}`).classList.add('keyboard--btn__active');
   });
   document.addEventListener('mouseup', () => {
-    document.querySelector('.keyboard--btn__active').classList.remove('keyboard--btn__active');
+    const activeKey = document.querySelector('.keyboard--btn__active');
+    if (activeKey) {
+      activeKey.classList.remove('keyboard--btn__active');
+    }
   });
 
   return keybordWrap;
