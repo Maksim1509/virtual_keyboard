@@ -3,11 +3,13 @@ const selectCase = (key, state) => {
   return key;
 };
 
-const arrEng = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', ']', ';', '\'', ',', '.', '`', '/'];
-const arrRu = ['ф', 'и', 'с', 'в', 'у', 'а', 'п', 'р', 'ш', 'о', 'л', 'д', 'ь', 'т', 'щ', 'з', 'й', 'к', 'ы', 'е', 'г', 'м', 'ц', 'ч', 'н', 'я', 'х', 'ъ', 'ж', 'э', 'б', 'ю', 'ё', '.'];
+const ARR_ENG = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', ']', ';', '\'', ',', '.', '`', '/'];
+const ARR_RU = ['ф', 'и', 'с', 'в', 'у', 'а', 'п', 'р', 'ш', 'о', 'л', 'д', 'ь', 'т', 'щ', 'з', 'й', 'к', 'ы', 'е', 'г', 'м', 'ц', 'ч', 'н', 'я', 'х', 'ъ', 'ж', 'э', 'б', 'ю', 'ё', '.'];
 
-const toRusLang = arrEng.reduce((acc, c, i) => ({ ...acc, [c]: arrRu[i] }), {});
-const toEngLang = arrRu.reduce((acc, c, i) => ({ ...acc, [c]: arrEng[i] }), {});
+const selectKeyLang = (lang, key) => (lang === 'eng' ? key : ARR_RU[ARR_ENG.indexOf(key)]);
+
+const toRusLang = ARR_ENG.reduce((acc, c, i) => ({ ...acc, [c]: ARR_RU[i] }), {});
+const toEngLang = ARR_RU.reduce((acc, c, i) => ({ ...acc, [c]: ARR_ENG[i] }), {});
 console.log(toRusLang, toEngLang);
 
 const map = {
@@ -178,9 +180,9 @@ const map = {
   ShiftRight: () => 'ShiftRight',
 };
 
-const keyboardBuild = () => {
+const keyboardBuild = (lang) => {
   const keyboard = `<div class="keyboard--row">
-  <div class="keyboard--btn" data-key="alphabet" id="backquote">\`</div>
+  <div class="keyboard--btn" data-key="alphabet" id="backquote">${selectKeyLang(lang, '`')}</div>
   <div class="keyboard--btn" id="1">1</div>
   <div class="keyboard--btn" id="2">2</div>
   <div class="keyboard--btn" id="3">3</div>
@@ -197,47 +199,47 @@ const keyboardBuild = () => {
 </div>
 <div class="keyboard--row">
   <div class="keyboard--btn" id="Tab">tab</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyQ">q</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyW">w</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyE">e</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyR">r</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyT">t</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyY">y</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyU">u</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyI">i</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyO">o</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyP">p</div>
-  <div class="keyboard--btn"data-key="alphabet" id="BracketLeft">[</div>
-  <div class="keyboard--btn"data-key="alphabet" id="BracketRight">]</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyQ">${selectKeyLang(lang, 'q')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyW">${selectKeyLang(lang, 'w')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyE">${selectKeyLang(lang, 'e')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyR">${selectKeyLang(lang, 'r')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyT">${selectKeyLang(lang, 't')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyY">${selectKeyLang(lang, 'y')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyU">${selectKeyLang(lang, 'u')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyI">${selectKeyLang(lang, 'i')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyO">${selectKeyLang(lang, 'o')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyP">${selectKeyLang(lang, 'p')}</div>
+  <div class="keyboard--btn"data-key="alphabet" id="BracketLeft">${selectKeyLang(lang, '[')}</div>
+  <div class="keyboard--btn"data-key="alphabet" id="BracketRight">${selectKeyLang(lang, ']')}</div>
   <div class="keyboard--btn" id="Backslash">\\</div>
 </div>
 <div class="keyboard--row">
   <div class="keyboard--btn" id="Caps">Caps Lock</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyA">a</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyS">s</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyD">d</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyF">f</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyG">g</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyH">h</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyJ">j</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyK">k</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyL">l</div>
-  <div class="keyboard--btn" data-key="alphabet" id="Semicolon">;</div>
-  <div class="keyboard--btn" data-key="alphabet" id="Quote">'</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyA">${selectKeyLang(lang, 'a')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyS">${selectKeyLang(lang, 's')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyD">${selectKeyLang(lang, 'd')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyF">${selectKeyLang(lang, 'f')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyG">${selectKeyLang(lang, 'g')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyH">${selectKeyLang(lang, 'h')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyJ">${selectKeyLang(lang, 'j')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyK">${selectKeyLang(lang, 'k')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyL">${selectKeyLang(lang, 'l')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="Semicolon">${selectKeyLang(lang, ';')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="Quote">${selectKeyLang(lang, '\'')}</div>
   <div class="keyboard--btn" id="Enter">enter</div>
 </div>
 <div class="keyboard--row">
   <div class="keyboard--btn" id="ShiftLeft">shift</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyZ">z</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyX">x</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyC">c</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyV">v</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyB">b</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyN">n</div>
-  <div class="keyboard--btn" data-key="alphabet" id="KeyM">m</div>
-  <div class="keyboard--btn" data-key="alphabet" id="Comma">,</div>
-  <div class="keyboard--btn" data-key="alphabet" id="Period">.</div>
-  <div class="keyboard--btn" data-key="alphabet" id="Slash">/</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyZ">${selectKeyLang(lang, 'z')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyX">${selectKeyLang(lang, 'x')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyC">${selectKeyLang(lang, 'c')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyV">${selectKeyLang(lang, 'v')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyB">${selectKeyLang(lang, 'b')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyN">${selectKeyLang(lang, 'n')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="KeyM">${selectKeyLang(lang, 'm')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="Comma">${selectKeyLang(lang, ',')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="Period">${selectKeyLang(lang, '.')}</div>
+  <div class="keyboard--btn" data-key="alphabet" id="Slash">${selectKeyLang(lang, '/')}</div>
   <div class="keyboard--btn" id="arrow-up">↑</div>
   <div class="keyboard--btn" id="ShiftRight">shift</div>
 </div>
@@ -250,20 +252,23 @@ const keyboardBuild = () => {
   <div class="keyboard--btn" id="arrow-left">←</div>
   <div class="keyboard--btn" id="arrow-bot">↓</div>
   <div class="keyboard--btn" id="arrow-right">→</div>
-</div>`;
+</div>
+<div class="change-lang-disc">Change Lang: "AltLeft + ShiftLeft"</div>`;
   return keyboard;
 };
 
 export default () => {
+  const lang = localStorage.getItem('lang') || 'eng';
+  console.log(lang);
   const state = {
-    lang: 'eng',
+    lang,
     toUpper: 'false',
     keyPressed: [],
   };
   const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab'];
   const keybordWrap = document.createElement('div');
   keybordWrap.className = 'keyboard-wrapper';
-  const keyboard = keyboardBuild();
+  const keyboard = keyboardBuild(state.lang);
   keybordWrap.innerHTML = keyboard;
 
   const output = document.querySelector('.output');
@@ -275,6 +280,7 @@ export default () => {
     state.keyPressed.push(code);
     if (state.keyPressed.includes('AltLeft') && state.keyPressed.includes('ShiftLeft')) {
       state.lang = state.lang === 'eng' ? 'ru' : 'eng';
+      localStorage.setItem('lang', state.lang);
       const alphabet = Array.from(document.querySelectorAll('[data-key="alphabet"]'));
       alphabet.forEach((key) => {
         if (state.lang === 'ru') {

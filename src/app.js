@@ -3,6 +3,9 @@ import buildOutput from './output.js';
 
 export default () => {
   const { body } = document;
+  const title = document.createElement('h1');
+  title.textContent = 'Virtual Keyboard OS Windows';
+  body.append(title);
   const container = document.createElement('section');
   container.className = 'container';
   body.append(container);
