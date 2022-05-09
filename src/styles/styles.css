@@ -68,8 +68,12 @@
           user-select: none;
 }
 
+.keyboard--btn:hover {
+  background-color: #c0c1f6;
+}
+
 .keyboard--btn__active {
-  background-color: #9c9ff5;
+  background-color: #444af6 !important;
 }
 
 #Space {
