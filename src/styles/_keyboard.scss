@@ -30,11 +30,15 @@
   }
 }
 
-#space {
+#Space {
   flex-grow: 15;
 }
 
-#caps, #backspace, #enter {
+#CapsLock, #Backspace, #NumpadEnter {
   text-transform: capitalize;
-  flex-grow: 3;
+  flex-grow: 4;
+}
+#Tab {
+  text-transform: capitalize;
+  flex-grow: 2;
 }

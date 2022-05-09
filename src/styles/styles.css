@@ -71,16 +71,23 @@
   background-color: #9c9ff5;
 }
 
-#space {
+#Space {
   -webkit-box-flex: 15;
       -ms-flex-positive: 15;
           flex-grow: 15;
 }
 
-#caps, #backspace, #enter {
+#CapsLock, #Backspace, #NumpadEnter {
   text-transform: capitalize;
-  -webkit-box-flex: 3;
-      -ms-flex-positive: 3;
-          flex-grow: 3;
+  -webkit-box-flex: 4;
+      -ms-flex-positive: 4;
+          flex-grow: 4;
+}
+
+#Tab {
+  text-transform: capitalize;
+  -webkit-box-flex: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
 }
 /*# sourceMappingURL=styles.css.map */

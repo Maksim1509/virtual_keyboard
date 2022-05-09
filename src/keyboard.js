@@ -118,30 +118,36 @@ const map = {
     return selectCase(key, state);
   },
   Backquote: (state) => {
-    const key = state.lang === 'eng' ? '`' : 'ё`';
-    return selectCase(key, state);
+    if (state.lang === 'ru') return selectCase('ё', state);
+    return state.upperCase ? '~' : '`';
   },
-  Digit1: (state) => {
-    const key = 1;
-    return key;
-  },
+  Digit1: (state) => (state.upperCase ? '!' : 1),
   Digit2: (state) => {
-    const key = 2;
-    return key;
+    const key = state.lang === 'eng' ? '@' : '"';
+    return state.upperCase ? key : 2;
   },
   Digit3: (state) => {
-    const key = 3;
-    return key;
+    const key = state.lang === 'eng' ? '#' : '№';
+    return state.upperCase ? key : 3;
   },
-  Digit4: () => 4,
-  Digit5: () => 5,
-  Digit6: () => 6,
-  Digit7: () => 7,
-  Digit8: () => 8,
-  Digit9: () => 9,
-  Digit0: () => 0,
-  Minus: () => '-',
-  Equal: () => '=',
+  Digit4: (state) => {
+    const key = state.lang === 'eng' ? '$' : ';';
+    return state.upperCase ? key : 4;
+  },
+  Digit5: (state) => (state.upperCase ? '%' : 5),
+  Digit6: (state) => {
+    const key = state.lang === 'eng' ? '^' : ':';
+    return state.upperCase ? key : 6;
+  },
+  Digit7: (state) => {
+    const key = state.lang === 'eng' ? '&' : '?';
+    return state.upperCase ? key : 7;
+  },
+  Digit8: (state) => (state.upperCase ? '*' : 8),
+  Digit9: (state) => (state.upperCase ? '(' : 9),
+  Digit0: (state) => (state.upperCase ? ')' : 0),
+  Minus: (state) => (state.upperCase ? '_' : '-'),
+  Equal: (state) => (state.upperCase ? '+' : '='),
   Tab: () => '\t',
   BracketLeft: (state) => {
     const key = state.lang === 'eng' ? '[' : 'х';
@@ -172,7 +178,6 @@ const map = {
     const key = state.lang === 'eng' ? '/' : '.';
     return selectCase(key, state);
   },
-  Enter: () => '\n',
   Space: () => ' ',
   AltLeft: () => 'AltLeft',
   AltRight: () => 'AltRight',
@@ -182,6 +187,11 @@ const map = {
   ArrowLeft: () => '←',
   ArrowDown: () => '↓',
   ArrowRight: () => '→',
+  MetaLeft: () => '',
+  ControlLeft: () => '',
+  NumpadEnter: () => '\n',
+  Enter: () => '\n',
+  Backspace: () => '',
 };
 
 const keyboardBuild = (lang) => {
@@ -199,7 +209,7 @@ const keyboardBuild = (lang) => {
   <div class="keyboard--btn" id="Digit0">0</div>
   <div class="keyboard--btn" id="Minus">-</div>
   <div class="keyboard--btn" id="Equal">=</div>
-  <div class="keyboard--btn" id="backspace">backspase</div>
+  <div class="keyboard--btn" id="Backspace">← Backspace</div>
 </div>
 <div class="keyboard--row">
   <div class="keyboard--btn" id="Tab">tab</div>
@@ -218,7 +228,7 @@ const keyboardBuild = (lang) => {
   <div class="keyboard--btn" id="Backslash">\\</div>
 </div>
 <div class="keyboard--row">
-  <div class="keyboard--btn" id="Caps">Caps Lock</div>
+  <div class="keyboard--btn" id="CapsLock">CapsLock</div>
   <div class="keyboard--btn" data-key="alphabet" id="KeyA">${selectKeyLang(lang, 'a')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="KeyS">${selectKeyLang(lang, 's')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="KeyD">${selectKeyLang(lang, 'd')}</div>
@@ -230,7 +240,7 @@ const keyboardBuild = (lang) => {
   <div class="keyboard--btn" data-key="alphabet" id="KeyL">${selectKeyLang(lang, 'l')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="Semicolon">${selectKeyLang(lang, ';')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="Quote">${selectKeyLang(lang, '\'')}</div>
-  <div class="keyboard--btn" id="Enter">enter</div>
+  <div class="keyboard--btn" id="NumpadEnter">enter</div>
 </div>
 <div class="keyboard--row">
   <div class="keyboard--btn" id="ShiftLeft">shift</div>
@@ -248,8 +258,8 @@ const keyboardBuild = (lang) => {
   <div class="keyboard--btn" id="ShiftRight">shift</div>
 </div>
 <div class="keyboard--row">
-  <div class="keyboard--btn" id="CtrlLeft">ctrl</div>
-  <div class="keyboard--btn" id="Win">win</div>
+  <div class="keyboard--btn" id="ControlLeft">ctrl</div>
+  <div class="keyboard--btn" id="MetaLeft">win</div>
   <div class="keyboard--btn" id="AltLeft">alt</div>
   <div class="keyboard--btn" id="Space"> </div>
   <div class="keyboard--btn" id="AltRight">alt</div>
@@ -266,7 +276,7 @@ export default () => {
   console.log(lang);
   const state = {
     lang,
-    toUpper: 'false',
+    upperCase: false,
     keyPressed: [],
   };
   const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab'];
@@ -296,6 +306,12 @@ export default () => {
         }
       });
     }
+    if (code === 'ShiftLeft' || code === 'ShiftRight') {
+      state.upperCase = true;
+    }
+    if (code === 'Backspace') {
+      output.value = output.value.slice(0, output.value.length - 1);
+    }
     const key = map[code](state);
     output.value = specialKeys.includes(key) ? output.value : output.value + key;
     document.querySelector(`#${code}`).classList.add('keyboard--btn__active');
@@ -304,6 +320,9 @@ export default () => {
     e.preventDefault();
     const { code } = e;
     state.keyPressed = state.keyPressed.filter((k) => k !== code);
+    if (code === 'ShiftLeft' || code === 'ShiftRight') {
+      state.upperCase = false;
+    }
     const key = document.querySelector(`#${code}`);
     if (key) key.classList.remove('keyboard--btn__active');
   });
