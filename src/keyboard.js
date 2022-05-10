@@ -241,7 +241,7 @@ const keyboardBuild = (lang) => {
   <div class="keyboard--btn" data-key="alphabet" id="KeyL">${selectKeyLang(lang, 'l')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="Semicolon">${selectKeyLang(lang, ';')}</div>
   <div class="keyboard--btn" data-key="alphabet" id="Quote">${selectKeyLang(lang, '\'')}</div>
-  <div class="keyboard--btn" id="NumpadEnter">enter</div>
+  <div class="keyboard--btn" id="Enter">enter</div>
 </div>
 <div class="keyboard--row">
   <div class="keyboard--btn" id="ShiftLeft">shift</div>
@@ -314,9 +314,10 @@ export default () => {
       output.value = output.value.slice(0, output.value.length - 1);
     }
     if (code === 'CapsLock') state.upperCase = !state.upperCase;
-    const key = map[code](state);
+    const key = map[code] ? map[code](state) : '';
     output.value = specialKeys.includes(key) ? output.value : output.value + key;
-    document.querySelector(`#${code}`).classList.add('keyboard--btn__active');
+    const currentBtn = document.querySelector(`#${code}`);
+    if (currentBtn) currentBtn.classList.add('keyboard--btn__active');
   });
   document.addEventListener('keyup', (e) => {
     e.preventDefault();
