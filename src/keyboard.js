@@ -279,6 +279,7 @@ export default () => {
     lang,
     upperCase: false,
     keyPressed: [],
+    shift: false,
   };
   const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab', 'Backspace', 'CapsLock'];
   const keybordWrap = document.createElement('div');
@@ -297,13 +298,11 @@ export default () => {
       state.lang = state.lang === 'eng' ? 'ru' : 'eng';
       localStorage.setItem('lang', state.lang);
       const alphabet = Array.from(document.querySelectorAll('[data-key="alphabet"]'));
-      alphabet.forEach((key) => {
+      alphabet.forEach((key, i) => {
         if (state.lang === 'ru') {
-          // eslint-disable-next-line no-param-reassign
-          key.textContent = toRusLang[key.textContent];
+          alphabet[i].textContent = toRusLang[key.textContent];
         } else {
-          // eslint-disable-next-line no-param-reassign
-          key.textContent = toEngLang[key.textContent];
+          alphabet[i].textContent = toEngLang[key.textContent];
         }
       });
     }
@@ -336,15 +335,28 @@ export default () => {
     if (id === 'Backspace') {
       output.value = output.value.slice(0, output.value.length - 1);
     }
+    if (id === 'ShiftLeft' || id === 'ShiftRight') {
+      state.upperCase = !state.upperCase;
+      state.shift = !state.shift;
+      document.querySelector(`#${id}`).classList.add('keyboard--btn__active');
+      return;
+    }
     const key = map[id](state);
     output.value = specialKeys.includes(key) ? output.value : output.value + key;
     document.querySelector(`#${id}`).classList.add('keyboard--btn__active');
   });
   document.addEventListener('mouseup', () => {
-    const activeKey = document.querySelector('.keyboard--btn__active');
-    if (activeKey) {
-      activeKey.classList.remove('keyboard--btn__active');
+    const activeKeys = document.querySelectorAll('.keyboard--btn__active');
+    if (state.shift && activeKeys.length > 1) {
+      state.shift = false;
+      state.upperCase = !state.upperCase;
+      activeKeys.forEach((k) => k.classList.remove('keyboard--btn__active'));
+      return;
     }
+    if (state.shift) {
+      return;
+    }
+    activeKeys.forEach((k) => k.classList.remove('keyboard--btn__active'));
     output.focus();
   });
 
