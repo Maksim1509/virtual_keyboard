@@ -323,6 +323,8 @@ export default () => {
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
       state.upperCase = false;
       state.shift = false;
+      document.querySelector('#ShiftLeft').classList.remove('keyboard--btn__active');
+      document.querySelector('#ShiftRight').classList.remove('keyboard--btn__active');
     }
     const key = document.querySelector(`#${code}`);
     if (key) key.classList.remove('keyboard--btn__active');
