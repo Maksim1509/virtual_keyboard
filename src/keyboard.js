@@ -10,7 +10,6 @@ const selectKeyLang = (lang, key) => (lang === 'eng' ? key : ARR_RU[ARR_ENG.inde
 
 const toRusLang = ARR_ENG.reduce((acc, c, i) => ({ ...acc, [c]: ARR_RU[i] }), {});
 const toEngLang = ARR_RU.reduce((acc, c, i) => ({ ...acc, [c]: ARR_ENG[i] }), {});
-console.log(toRusLang, toEngLang);
 
 const map = {
   KeyQ: (state) => {
@@ -274,7 +273,6 @@ const keyboardBuild = (lang) => {
 
 export default () => {
   const lang = localStorage.getItem('lang') || 'eng';
-  console.log(lang);
   const state = {
     lang,
     upperCase: false,
@@ -292,7 +290,6 @@ export default () => {
   document.addEventListener('keydown', (e) => {
     e.preventDefault();
     const { code } = e;
-    console.log(code);
     state.keyPressed.push(code);
     if (state.keyPressed.includes('AltLeft') && state.keyPressed.includes('ShiftLeft')) {
       state.lang = state.lang === 'eng' ? 'ru' : 'eng';
@@ -307,7 +304,8 @@ export default () => {
       });
     }
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
-      state.upperCase = !state.upperCase;
+      state.upperCase = true;
+      state.shift = true;
     }
     if (code === 'Backspace') {
       output.value = output.value.slice(0, output.value.length - 1);
@@ -323,7 +321,8 @@ export default () => {
     const { code } = e;
     state.keyPressed = state.keyPressed.filter((k) => k !== code);
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
-      state.upperCase = !state.upperCase;
+      state.upperCase = false;
+      state.shift = false;
     }
     const key = document.querySelector(`#${code}`);
     if (key) key.classList.remove('keyboard--btn__active');
@@ -347,6 +346,13 @@ export default () => {
   });
   document.addEventListener('mouseup', () => {
     const activeKeys = document.querySelectorAll('.keyboard--btn__active');
+    if (state.keyPressed.includes('ShiftLeft') || state.keyPressed.includes('ShiftRight')) {
+      activeKeys.forEach((k) => {
+        if (k.textContent === 'shift') return;
+        k.classList.remove('keyboard--btn__active');
+      });
+      return;
+    }
     if (state.shift && activeKeys.length > 1) {
       state.shift = false;
       state.upperCase = !state.upperCase;
