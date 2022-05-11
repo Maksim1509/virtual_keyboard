@@ -10,7 +10,6 @@ const selectKeyLang = (lang, key) => (lang === 'eng' ? key : ARR_RU[ARR_ENG.inde
 
 const toRusLang = ARR_ENG.reduce((acc, c, i) => ({ ...acc, [c]: ARR_RU[i] }), {});
 const toEngLang = ARR_RU.reduce((acc, c, i) => ({ ...acc, [c]: ARR_ENG[i] }), {});
-console.log(toRusLang, toEngLang);
 
 const map = {
   KeyQ: (state) => {
@@ -274,11 +273,11 @@ const keyboardBuild = (lang) => {
 
 export default () => {
   const lang = localStorage.getItem('lang') || 'eng';
-  console.log(lang);
   const state = {
     lang,
     upperCase: false,
     keyPressed: [],
+    shift: false,
   };
   const specialKeys = ['AltLeft', 'AltRight', 'ShiftLeft', 'ShiftRight', 'Tab', 'Backspace', 'CapsLock'];
   const keybordWrap = document.createElement('div');
@@ -291,24 +290,22 @@ export default () => {
   document.addEventListener('keydown', (e) => {
     e.preventDefault();
     const { code } = e;
-    console.log(code);
     state.keyPressed.push(code);
     if (state.keyPressed.includes('AltLeft') && state.keyPressed.includes('ShiftLeft')) {
       state.lang = state.lang === 'eng' ? 'ru' : 'eng';
       localStorage.setItem('lang', state.lang);
       const alphabet = Array.from(document.querySelectorAll('[data-key="alphabet"]'));
-      alphabet.forEach((key) => {
+      alphabet.forEach((key, i) => {
         if (state.lang === 'ru') {
-          // eslint-disable-next-line no-param-reassign
-          key.textContent = toRusLang[key.textContent];
+          alphabet[i].textContent = toRusLang[key.textContent];
         } else {
-          // eslint-disable-next-line no-param-reassign
-          key.textContent = toEngLang[key.textContent];
+          alphabet[i].textContent = toEngLang[key.textContent];
         }
       });
     }
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
-      state.upperCase = !state.upperCase;
+      state.upperCase = true;
+      state.shift = true;
     }
     if (code === 'Backspace') {
       output.value = output.value.slice(0, output.value.length - 1);
@@ -324,7 +321,8 @@ export default () => {
     const { code } = e;
     state.keyPressed = state.keyPressed.filter((k) => k !== code);
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
-      state.upperCase = !state.upperCase;
+      state.upperCase = false;
+      state.shift = false;
     }
     const key = document.querySelector(`#${code}`);
     if (key) key.classList.remove('keyboard--btn__active');
@@ -336,15 +334,35 @@ export default () => {
     if (id === 'Backspace') {
       output.value = output.value.slice(0, output.value.length - 1);
     }
+    if (id === 'ShiftLeft' || id === 'ShiftRight') {
+      state.upperCase = !state.upperCase;
+      state.shift = !state.shift;
+      document.querySelector(`#${id}`).classList.add('keyboard--btn__active');
+      return;
+    }
     const key = map[id](state);
     output.value = specialKeys.includes(key) ? output.value : output.value + key;
     document.querySelector(`#${id}`).classList.add('keyboard--btn__active');
   });
   document.addEventListener('mouseup', () => {
-    const activeKey = document.querySelector('.keyboard--btn__active');
-    if (activeKey) {
-      activeKey.classList.remove('keyboard--btn__active');
+    const activeKeys = document.querySelectorAll('.keyboard--btn__active');
+    if (state.keyPressed.includes('ShiftLeft') || state.keyPressed.includes('ShiftRight')) {
+      activeKeys.forEach((k) => {
+        if (k.textContent === 'shift') return;
+        k.classList.remove('keyboard--btn__active');
+      });
+      return;
     }
+    if (state.shift && activeKeys.length > 1) {
+      state.shift = false;
+      state.upperCase = !state.upperCase;
+      activeKeys.forEach((k) => k.classList.remove('keyboard--btn__active'));
+      return;
+    }
+    if (state.shift) {
+      return;
+    }
+    activeKeys.forEach((k) => k.classList.remove('keyboard--btn__active'));
     output.focus();
   });
 
